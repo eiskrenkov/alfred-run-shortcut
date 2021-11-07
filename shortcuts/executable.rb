@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'mkmf'
-
 module Shortcuts
   module Executable
     EXECUTABLE_NAME = 'shortcuts'
@@ -14,11 +12,15 @@ module Shortcuts
       private
 
       def execute(command)
-        `shortcuts #{command}` if available?
+        `#{EXECUTABLE_NAME} #{command}` if available?
       end
 
       def available?
-        !!find_executable(EXECUTABLE_NAME)
+        !executable_path.empty? && File.executable?(executable_path)
+      end
+
+      def executable_path
+        @executable_path ||= `which #{EXECUTABLE_NAME}`.strip
       end
     end
   end
